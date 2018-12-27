@@ -1,0 +1,14 @@
+{
+  "name": "pex-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha ${TEST_FILES:-test.js} --watch --recursive"
+  },
+  "dependencies": {
+    "@types/immutable": "^3.8.7",
+    "immutable": "^4.0.0-rc.12",
+    "mocha": "^5.2.0"
+  }
+}
