@@ -14,11 +14,13 @@ it('should be concatenate errors to a single string separated by a dot', () => {
   }
 
   const results = transformErrors(errors)
+  const matchedResults = results.equals(Immutable.Map(error))
 
   console.log(JSON.stringify(results))
   console.log(JSON.stringify(error))
+  console.log(JSON.stringify(matchedResults))
 
-  assert.deepEqual(results, error)
+  assert.equal(true, matchedResults)
 })
 
 // it('should tranform errors', () => {
