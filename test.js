@@ -23,6 +23,33 @@ it('should be concatenate errors to a single string separated by a dot', () => {
   assert.equal(true, matchedResults)
 })
 
+// it('should flatten errors array into a single string on parent node', () => {
+//   const errors = {
+//     name: {
+//       first: ['Only alphanumeric characters are allowed'],
+//       last: ['Only alphanumeric characters are allowed'],
+//     },
+//     names: [{}, {
+//       first: ['Only alphanumeric characters are allowed'],
+//       last: ['Only alphanumeric characters are allowed'],
+//     }, {}],
+//   }
+
+//   const error = {
+//     name: 'Only alphanumeric characters are allowed.',
+//     names: 'Only alphanumeric characters are allowed.',
+//   }
+
+//   const results = transformErrors(errors)
+//   const matchedResults = results.equals(Immutable.Map(error))
+
+//   console.log('__results__ :',JSON.stringify(results))
+//   // console.log('__error__ :',JSON.stringify(error))
+//   console.log('__matchedResults__ :',JSON.stringify(matchedResults))
+
+//   assert.equal(true, matchedResults)
+// })
+
 // it('should tranform errors', () => {
 //   // example error object returned from API converted to Immutable.Map
 //   const errors = Immutable.fromJS({
