@@ -2,12 +2,11 @@ const Immutable = require('immutable');
 const assert = require('assert');
 const { transformErrors } = require('./formsErrors')
 
-it('should be concatenate errors to a single string separated by a dot', () => {
+xit('should be concatenate errors to a single string separated by a dot', () => {
   const errors = {
     name: ['This field is required', 'Another error'],
     age: ['Only numeric characters are allowed'],
   }
-
   const error = {
     name: 'This field is required. Another error.',
     age: 'Only numeric characters are allowed.'
@@ -16,9 +15,32 @@ it('should be concatenate errors to a single string separated by a dot', () => {
   const results = transformErrors(errors)
   const matchedResults = results.equals(Immutable.Map(error))
 
-  console.log(JSON.stringify(results))
-  console.log(JSON.stringify(error))
-  console.log(JSON.stringify(matchedResults))
+  assert.equal(true, matchedResults)
+})
+
+it('should flatten errors array into a single string on parent node', () => {
+  const errors = {
+    name: {
+      first: ['Only alphanumeric characters are allowed'],
+      last: ['Only alphanumeric characters are allowed'],
+    },
+    // names: [{}, {
+    //   first: ['Only alphanumeric characters are allowed'],
+    //   last: ['Only alphanumeric characters are allowed'],
+    // }, {}],
+  }
+
+  const error = {
+    name: 'Only alphanumeric characters are allowed.',
+    // names: 'Only alphanumeric characters are allowed.',
+  }
+
+  const results = transformErrors(errors)
+  const matchedResults = results.equals(Immutable.Map(error))
+
+  console.log('__results__ :', JSON.stringify(results))
+  console.log('__error__ :', JSON.stringify(error))
+  // console.log('__matchedResults__ :', JSON.stringify(matchedResults))
 
   assert.equal(true, matchedResults)
 })
