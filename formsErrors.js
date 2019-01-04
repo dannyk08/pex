@@ -1,10 +1,49 @@
 const Immutable = require('immutable')
 
-// function transformErrors(formErrors) {
-//   return Immutable.Map(Object.keys(formErrors).reduce((prev, errorKey) => {
-//     return { ...prev, [errorKey]: formErrors[errorKey].map(e => e + '.').join(' ').trim() }
-//   }, {}))
-// }
+function errorListReducer(prev, errorKey, obj) {
+  // is recursive obj
+  if (!isArray(obj[errorKey])) {
+    let what = Object.keys(obj)
+      .reduce((objPrev, objErrorKey) => {
+        console.log('__obj[objErrorKey]__', JSON.stringify(obj[objErrorKey]), isArray(obj[objErrorKey]));
+
+        if (!isArray(obj[objErrorKey])) {
+          let something = Object.keys(obj[objErrorKey])
+            .reduce((oObjPrev, oObjErrorKey) => ([...oObjPrev, ...obj[objErrorKey][oObjErrorKey]]), [])
+          return { ...objPrev, [objErrorKey]: [...new Set(something)].map(e => e + '.').join(' ') }
+        } else {
+          return ''
+        }
+      }, {})
+    return what
+  }
+  if (isArray(obj[errorKey])) {
+    if (isObj(obj[errorKey][0])) {
+      // console.log('__OBJ__', JSON.stringify(obj[errorKey][0]));
+    }
+
+    if (isString(obj[errorKey][0])) {
+      return arrayReduceStrings(prev, errorKey, obj)
+    }
+  }
+}
+
+function transformErrors(formErrors) {
+  return Immutable.Map(Object.keys(formErrors)
+    .reduce((prev, errorKey) => errorListReducer(prev, errorKey, formErrors), {}))
+}
+
+function arrayReduceStrings(prev, errorKey, obj) {
+  return { ...prev, [errorKey]: [...new Set(obj[errorKey])].map(e => e + '.').join(' ') }
+}
+
+function arrayReduceLiterals() {
+  // 
+}
+
+function isString(obj) {
+  return typeof obj === 'string'
+}
 
 function isObj(obj) {
   return Object.prototype.toString(obj) === '[object Object]'
@@ -12,38 +51,6 @@ function isObj(obj) {
 
 function isArray(obj) {
   return Array.isArray(obj)
-}
-
-function transformErrors(formErrors) {
-  return Immutable.Map(Object.keys(formErrors).reduce((prev, errorKey) => {
-    // if (isObj(formErrors[errorKey]) && !isArray(formErrors[errorKey])) {
-    //   let array = Object.keys(formErrors[errorKey]).reduce((nPrev, nErrorKey) => {
-    //     return [...nPrev, ...formErrors[errorKey][nErrorKey]]
-    //   }, [])
-    //   let set = [...new Set(array)].map(e => e + '.').join(' ').trim()
-    //   return { ...prev, [errorKey]: set }
-    // }
-    // if (isArray(formErrors[errorKey])) {
-    //   let errors = formErrors[errorKey]
-    //     .filter(e => Object.keys(e).length)
-    //     .map(e => {
-    //       let array = Object.keys(e).reduce((nPrev, nErrorKey) => {
-    //         return [...nPrev, ...e[nErrorKey]]
-    //       }, [])
-    //       let set = [...new Set(array)]
-    //         .map(e => e + '.').join(' ').trim()
-    //       return set
-    //     })
-    //     .join(' ').trim()
-
-    //   return {
-    //     ...prev,
-    //     [errorKey]: errors
-    //   }
-    // }
-
-    return { ...prev, [errorKey]: formErrors[errorKey].map(e => e + '.').join(' ').trim() }
-  }, {}))
 }
 
 module.exports = {
